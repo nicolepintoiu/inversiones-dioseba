@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inversiones DIOSEBA</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <h1>Inversiones DIOSEBA</h1>
+      <p class="subtitle">Gestión de Inmuebles</p>
+    </div>
+  </header>
+
+  <nav class="main-nav">
+    <button class="nav-btn active" onclick="showSection('pagos', this)">
+      <span class="nav-icon">💳</span>
+      Pagos de Inquilinos
+    </button>
+    <button class="nav-btn" onclick="showSection('gastos', this)">
+      <span class="nav-icon">📋</span>
+      Gastos Generales
+    </button>
+  </nav>
+
+  <main>
+
+    <!-- SECCIÓN: Pagos de Inquilinos -->
+    <section id="pagos" class="section active">
+      <div class="section-header">
+        <h2>Pagos de Inquilinos</h2>
+        <button class="btn-primary" onclick="openModal('modal-pago')">+ Registrar Pago</button>
+      </div>
+
+      <div class="summary-cards">
+        <div class="card card-green">
+          <p class="card-label">Total en dólares</p>
+          <p class="card-value" id="total-usd">$0</p>
+        </div>
+        <div class="card card-yellow">
+          <p class="card-label">Total en bolívares</p>
+          <p class="card-value" id="total-bs">Bs 0,00</p>
+        </div>
+        <div class="card card-blue">
+          <p class="card-label">Pagos registrados</p>
+          <p class="card-value" id="count-pagos">0</p>
+        </div>
+        <div class="card card-green">
+          <p class="card-label">Pagos realizados</p>
+          <p class="card-value" id="count-pagados">0</p>
+        </div>
+        <div class="card card-red">
+          <p class="card-label">Pagos pendientes</p>
+          <p class="card-value" id="count-pendientes">0</p>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <input type="text" id="filtro-pago-busqueda" placeholder="Buscar inquilino..." oninput="filtrarPagos()" />
+        <select id="filtro-pago-inmueble" onchange="filtrarPagos()">
+          <option value="">Todos los inmuebles</option>
+          <option value="MATILDE PB">MATILDE PB</option>
+          <option value="MATILDE ANEXO">MATILDE ANEXO</option>
+          <option value="MATILDE 1.1">MATILDE 1.1</option>
+          <option value="MATILDE 1.2">MATILDE 1.2</option>
+          <option value="MATILDE 2.1">MATILDE 2.1</option>
+          <option value="MATILDE 2.2">MATILDE 2.2</option>
+          <option value="MATILDE 3.1">MATILDE 3.1</option>
+          <option value="MATILDE 3.2">MATILDE 3.2</option>
+          <option value="MATILDE 4">MATILDE 4</option>
+          <option value="QUINTA ILSE PB">QUINTA ILSE PB</option>
+          <option value="QUINTA ILSE PISO 1">QUINTA ILSE PISO 1</option>
+          <option value="QUINTA ILSE PISO 2">QUINTA ILSE PISO 2</option>
+          <option value="QUINTA LIRIA LOCAL">QUINTA LIRIA LOCAL</option>
+          <option value="TORRE SAMAN OFICINA 64">TORRE SAMAN OFICINA 64</option>
+          <option value="LOS MONJES 1-A">LOS MONJES 1-A</option>
+          <option value="SOLANO 7-C">SOLANO 7-C</option>
+          <option value="TORRE CAPITAL 7-D">TORRE CAPITAL 7-D</option>
+          <option value="JOHNSON 4-A">JOHNSON 4-A</option>
+        </select>
+        <select id="filtro-pago-estado" onchange="filtrarPagos()">
+          <option value="">Todos los estados</option>
+          <option value="Pagado">Pagado</option>
+          <option value="No pagado">No pagado</option>
+        </select>
+        <select id="filtro-pago-moneda" onchange="filtrarPagos()">
+          <option value="">Todas las monedas</option>
+          <option value="Dólares">Dólares</option>
+          <option value="Bolívares">Bolívares</option>
+        </select>
+        <input type="date" id="filtro-pago-fecha" onchange="filtrarPagos()" />
+        <button class="btn-secondary" onclick="limpiarFiltrosPagos()">Limpiar filtros</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Inquilino</th>
+              <th>Teléfono</th>
+              <th>Inmueble</th>
+              <th>Monto (USD)</th>
+              <th>Tipo de pago</th>
+              <th>Tasa (Bs/$)</th>
+              <th>Tipo de tasa</th>
+              <th>Monto (Bs)</th>
+              <th>Fecha</th>
+              <th>Notas</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-pagos">
+            <tr class="empty-row">
+              <td colspan="12">No hay pagos registrados aún.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: Gastos Generales -->
+    <section id="gastos" class="section">
+      <div class="section-header">
+        <h2>Gastos Generales</h2>
+        <button class="btn-primary" onclick="openModal('modal-gasto')">+ Registrar Gasto</button>
+      </div>
+      <div class="summary-cards">
+        <div class="card card-red">
+          <p class="card-label">Total en dólares</p>
+          <p class="card-value" id="total-gastado-usd">$0</p>
+        </div>
+        <div class="card card-yellow">
+          <p class="card-label">Total en bolívares</p>
+          <p class="card-value" id="total-gastado-bs">Bs 0,00</p>
+        </div>
+        <div class="card card-blue">
+          <p class="card-label">Gastos registrados</p>
+          <p class="card-value" id="count-gastos">0</p>
+        </div>
+        <div class="card card-green">
+          <p class="card-label">Gastos realizados</p>
+          <p class="card-value" id="count-gastos-pagados">0</p>
+        </div>
+        <div class="card card-red">
+          <p class="card-label">Gastos pendientes</p>
+          <p class="card-value" id="count-gastos-pendientes">0</p>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <input type="text" id="filtro-gasto-busqueda" placeholder="Buscar gasto..." oninput="filtrarGastos()" />
+        <select id="filtro-gasto-categoria" onchange="filtrarGastos()">
+          <option value="">Todas las categorías</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Reparaciones">Reparaciones</option>
+          <option value="Limpieza">Limpieza</option>
+          <option value="Administración">Administración</option>
+          <option value="Otros">Otros</option>
+        </select>
+        <select id="filtro-gasto-estado" onchange="filtrarGastos()">
+          <option value="">Todos los estados</option>
+          <option value="Pagado">Pagado</option>
+          <option value="No pagado">No pagado</option>
+        </select>
+        <select id="filtro-gasto-moneda" onchange="filtrarGastos()">
+          <option value="">Todas las monedas</option>
+          <option value="Dólares">Dólares</option>
+          <option value="Bolívares">Bolívares</option>
+        </select>
+        <input type="date" id="filtro-gasto-fecha" onchange="filtrarGastos()" />
+        <button class="btn-secondary" onclick="limpiarFiltrosGastos()">Limpiar filtros</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Categoría</th>
+              <th>Monto (USD)</th>
+              <th>Tipo de pago</th>
+              <th>Tasa (Bs/$)</th>
+              <th>Tipo de tasa</th>
+              <th>Monto (Bs)</th>
+              <th>Fecha</th>
+              <th>Notas</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-gastos">
+            <tr class="empty-row">
+              <td colspan="12">No hay gastos registrados aún.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: Registrar Pago -->
+  <div id="modal-pago" class="modal-overlay" onclick="closeModalOutside(event, 'modal-pago')">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Registrar Pago</h3>
+        <button class="close-btn" onclick="closeModal('modal-pago')">✕</button>
+      </div>
+      <form id="form-pago" onsubmit="registrarPago(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre del inquilino</label>
+            <input type="text" id="pago-inquilino" placeholder="Nombre completo" required />
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="pago-telefono" placeholder="Ej: 0412-1234567" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Inmueble</label>
+          <select id="pago-inmueble" required>
+            <option value="" disabled selected>Selecciona un inmueble...</option>
+            <optgroup label="EDIFICIO DOÑA MATILDE">
+              <option value="MATILDE PB">MATILDE PB</option>
+              <option value="MATILDE ANEXO">MATILDE ANEXO</option>
+              <option value="MATILDE 1.1">MATILDE 1.1</option>
+              <option value="MATILDE 1.2">MATILDE 1.2</option>
+              <option value="MATILDE 2.1">MATILDE 2.1</option>
+              <option value="MATILDE 2.2">MATILDE 2.2</option>
+              <option value="MATILDE 3.1">MATILDE 3.1</option>
+              <option value="MATILDE 3.2">MATILDE 3.2</option>
+              <option value="MATILDE 4">MATILDE 4</option>
+            </optgroup>
+            <optgroup label="QUINTA ILSE">
+              <option value="QUINTA ILSE PB">PB</option>
+              <option value="QUINTA ILSE PISO 1">Piso 1</option>
+              <option value="QUINTA ILSE PISO 2">Piso 2</option>
+            </optgroup>
+            <optgroup label="QUINTA LIRIA">
+              <option value="QUINTA LIRIA LOCAL">Local</option>
+            </optgroup>
+            <optgroup label="TORRE SAMAN">
+              <option value="TORRE SAMAN OFICINA 64">Oficina 64</option>
+            </optgroup>
+            <optgroup label="RESIDENCIA LOS MONJES">
+              <option value="LOS MONJES 1-A">1-A</option>
+            </optgroup>
+            <optgroup label="RESIDENCIA SOLANO">
+              <option value="SOLANO 7-C">7-C</option>
+            </optgroup>
+            <optgroup label="TORRE CAPITAL">
+              <option value="TORRE CAPITAL 7-D">7-D</option>
+            </optgroup>
+            <optgroup label="EDIFICIO JOHNSON">
+              <option value="JOHNSON 4-A">4-A</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipo de moneda</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="tipo-moneda" value="Dólares" checked onchange="toggleMoneda(this.value)" />
+              <span class="radio-text moneda-usd">Dólares</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="tipo-moneda" value="Bolívares" onchange="toggleMoneda(this.value)" />
+              <span class="radio-text moneda-bs">Bolívares</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label id="label-monto">Monto (USD)</label>
+            <input type="number" id="pago-monto" placeholder="0.00" min="0" step="0.01" required oninput="calcularBs()" />
+          </div>
+          <div class="form-group">
+            <label>Fecha de pago</label>
+            <input type="date" id="pago-fecha" required />
+          </div>
+        </div>
+
+        <!-- Campos extra para pago en bolívares -->
+        <div id="campos-bs" style="display:none;">
+          <div class="bs-box">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo de tasa</label>
+                <select id="pago-tipo-tasa" onchange="onTipoTasaChange(this.value)">
+                  <option value="BCV dólar">BCV dólar</option>
+                  <option value="BCV euro">BCV euro</option>
+                  <option value="Tasa personalizada">Tasa personalizada</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Tasa utilizada (Bs/$)</label>
+                <input type="number" id="pago-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBs()" />
+              </div>
+            </div>
+            <div class="resultado-bs">
+              <span class="resultado-label">Total en bolívares:</span>
+              <span class="resultado-valor" id="resultado-bs">Bs 0,00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="pago-estado" value="Pagado" checked />
+              <span class="radio-text pagado">Pagado</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="pago-estado" value="No pagado" />
+              <span class="radio-text no-pagado">No pagado</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <textarea id="pago-notas" placeholder="Observaciones..." rows="2"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-pago')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Registrar Gasto -->
+  <div id="modal-gasto" class="modal-overlay" onclick="closeModalOutside(event, 'modal-gasto')">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Registrar Gasto</h3>
+        <button class="close-btn" onclick="closeModal('modal-gasto')">✕</button>
+      </div>
+      <form id="form-gasto" onsubmit="registrarGasto(event)">
+        <div class="form-group">
+          <label>Nombre del gasto</label>
+          <input type="text" id="gasto-nombre" placeholder="Ej: Reparación de aire acondicionado" required />
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="gasto-descripcion" placeholder="Ej: Cambio de pieza y mantenimiento" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="gasto-categoria">
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Reparaciones">Reparaciones</option>
+            <option value="Limpieza">Limpieza</option>
+            <option value="Administración">Administración</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tipo de moneda</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="gasto-moneda" value="Dólares" checked onchange="toggleMonedaGasto(this.value)" />
+              <span class="radio-text moneda-usd">Dólares</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gasto-moneda" value="Bolívares" onchange="toggleMonedaGasto(this.value)" />
+              <span class="radio-text moneda-bs">Bolívares</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label id="label-monto-gasto">Monto (USD)</label>
+            <input type="number" id="gasto-monto" placeholder="0.00" min="0" step="0.01" required oninput="calcularBsGasto()" />
+          </div>
+          <div class="form-group">
+            <label>Fecha del gasto</label>
+            <input type="date" id="gasto-fecha" required />
+          </div>
+        </div>
+
+        <!-- Campos extra para gasto en bolívares -->
+        <div id="campos-bs-gasto" style="display:none;">
+          <div class="bs-box">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo de tasa</label>
+                <select id="gasto-tipo-tasa" onchange="onTipoTasaChangeGasto(this.value)">
+                  <option value="BCV dólar">BCV dólar</option>
+                  <option value="BCV euro">BCV euro</option>
+                  <option value="Tasa personalizada">Tasa personalizada</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Tasa utilizada (Bs/$)</label>
+                <input type="number" id="gasto-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBsGasto()" />
+              </div>
+            </div>
+            <div class="resultado-bs">
+              <span class="resultado-label">Total en bolívares:</span>
+              <span class="resultado-valor" id="resultado-bs-gasto">Bs 0,00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estado</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="gasto-estado" value="Pagado" checked />
+              <span class="radio-text pagado">Pagado</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="gasto-estado" value="No pagado" />
+              <span class="radio-text no-pagado">No pagado</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Notas (opcional)</label>
+          <textarea id="gasto-notas" placeholder="Observaciones..." rows="2"></textarea>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('modal-gasto')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
