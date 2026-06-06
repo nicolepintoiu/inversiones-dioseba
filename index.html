@@ -8,317 +8,258 @@
 </head>
 <body>
 
-  <header>
-    <div class="header-inner">
-      <div class="header-icon">🏢</div>
-      <div>
-        <h1>Inversiones DIOSEBA</h1>
-        <p class="subtitle">Gestión de Inmuebles</p>
-      </div>
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-box">D</div>
+      DIOSEBA
     </div>
+    <nav class="topbar-nav">
+      <button class="active" onclick="showSection('pagos', this)">Pagos de Inquilinos</button>
+      <button onclick="showSection('gastos', this)">Gastos Generales</button>
+      <button onclick="showSection('nonna', this)">Casa Nonna</button>
+    </nav>
+    <button class="topbar-btn" id="btn-registrar" onclick="openModalActivo()">+ Registrar Pago</button>
   </header>
 
-  <nav class="main-nav">
-    <button class="nav-btn active" onclick="showSection('pagos', this)">💳 Pagos de Inquilinos</button>
-    <button class="nav-btn" onclick="showSection('gastos', this)">📋 Gastos Generales</button>
-    <button class="nav-btn" onclick="showSection('nonna', this)">🏠 Casa Nonna</button>
-  </nav>
-
-  <main>
+  <div class="app-layout">
 
     <!-- ===================== PAGOS ===================== -->
-    <section id="pagos" class="section active">
-      <div class="section-header">
-        <div>
-          <h2>Pagos de Inquilinos</h2>
+    <div id="pagos" class="section active">
+      <aside class="sidebar">
+        <div class="sidebar-title">Filtros de control</div>
+        <div class="filter-block">
+          <span class="filter-label">Buscar</span>
+          <input type="text" id="filtro-pago-busqueda" placeholder="Inquilino..." oninput="filtrarPagos()" />
         </div>
-        <button class="btn-primary" onclick="openModal('modal-pago')">+ Registrar Pago</button>
-      </div>
-
-      <div class="summary-cards">
-        <div class="card card-green">
-          <p class="card-label">Total en dólares</p>
-          <p class="card-value" id="total-usd">$0</p>
+        <div class="filter-block">
+          <span class="filter-label">Mes</span>
+          <select id="filtro-pago-mes" onchange="filtrarPagos()">
+            <option value="">Todos los meses</option>
+            <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
+            <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
+            <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+          </select>
         </div>
-        <div class="card card-yellow">
-          <p class="card-label">Total en bolívares</p>
-          <p class="card-value" id="total-bs" style="font-size:1.1rem;margin-top:4px;">Bs 0,00</p>
+        <div class="filter-block">
+          <span class="filter-label">Inmueble</span>
+          <select id="filtro-pago-inmueble" onchange="filtrarPagos()">
+            <option value="">Todos</option>
+            <option>MATILDE PB</option><option>MATILDE ANEXO</option><option>MATILDE 1.1</option>
+            <option>MATILDE 1.2</option><option>MATILDE 2.1</option><option>MATILDE 2.2</option>
+            <option>MATILDE 3.1</option><option>MATILDE 3.2</option><option>MATILDE 4</option>
+            <option>QUINTA ILSE PB</option><option>QUINTA ILSE PISO 1</option><option>QUINTA ILSE PISO 2</option>
+            <option>QUINTA LIRIA LOCAL</option><option>TORRE SAMAN OFICINA 64</option>
+            <option>LOS MONJES 1-A</option><option>SOLANO 7-C</option>
+            <option>TORRE CAPITAL 7-D</option><option>JOHNSON 4-A</option>
+          </select>
         </div>
-        <div class="card card-blue">
-          <p class="card-label">Pagos registrados</p>
-          <p class="card-value" id="count-pagos">0</p>
+        <div class="filter-block">
+          <span class="filter-label">Estado</span>
+          <select id="filtro-pago-estado" onchange="filtrarPagos()">
+            <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
+          </select>
         </div>
-        <div class="card card-green">
-          <p class="card-label">Pagos realizados</p>
-          <p class="card-value" id="count-pagados">0</p>
+        <div class="filter-block">
+          <span class="filter-label">Método</span>
+          <select id="filtro-pago-metodo" onchange="filtrarPagos()">
+            <option value="">Todos</option><option>Zelle</option><option>Dólares</option><option>Bolívares</option><option>Mixto</option>
+          </select>
         </div>
-        <div class="card card-red">
-          <p class="card-label">Pagos pendientes</p>
-          <p class="card-value" id="count-pendientes">0</p>
+        <div class="filter-block">
+          <span class="filter-label">Fecha</span>
+          <input type="date" id="filtro-pago-fecha" onchange="filtrarPagos()" />
         </div>
-      </div>
-
-      <div class="filtros">
-        <div class="filtros-titulo">Filtros</div>
-        <div class="filtros-row">
-          <div class="filtro-group">
-            <span class="filtro-label">Inquilino</span>
-            <input type="text" id="filtro-pago-busqueda" placeholder="Buscar..." oninput="filtrarPagos()" />
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Mes</span>
-            <select id="filtro-pago-mes" onchange="filtrarPagos()">
-              <option value="">Todos</option>
-              <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
-              <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
-              <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Inmueble</span>
-            <select id="filtro-pago-inmueble" onchange="filtrarPagos()">
-              <option value="">Todos</option>
-              <option>MATILDE PB</option><option>MATILDE ANEXO</option><option>MATILDE 1.1</option>
-              <option>MATILDE 1.2</option><option>MATILDE 2.1</option><option>MATILDE 2.2</option>
-              <option>MATILDE 3.1</option><option>MATILDE 3.2</option><option>MATILDE 4</option>
-              <option>QUINTA ILSE PB</option><option>QUINTA ILSE PISO 1</option><option>QUINTA ILSE PISO 2</option>
-              <option>QUINTA LIRIA LOCAL</option><option>TORRE SAMAN OFICINA 64</option>
-              <option>LOS MONJES 1-A</option><option>SOLANO 7-C</option>
-              <option>TORRE CAPITAL 7-D</option><option>JOHNSON 4-A</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Estado</span>
-            <select id="filtro-pago-estado" onchange="filtrarPagos()">
-              <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Método</span>
-            <select id="filtro-pago-metodo" onchange="filtrarPagos()">
-              <option value="">Todos</option><option>Zelle</option><option>Bolívares</option><option>Mixto</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Fecha</span>
-            <input type="date" id="filtro-pago-fecha" onchange="filtrarPagos()" />
-          </div>
-          <button class="btn-secondary" onclick="limpiarFiltrosPagos()">Limpiar</button>
+        <button class="btn-limpiar" onclick="limpiarFiltrosPagos()">Limpiar Filtros</button>
+      </aside>
+      <main class="main-content">
+        <div class="page-title">Pagos de Inquilinos</div>
+        <div class="page-sub">Control de cánones y pagos por inmueble</div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-card-label">Total USD</div><div class="stat-card-value" id="total-usd">$0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Total Bs</div><div class="stat-card-value small" id="total-bs">Bs 0,00</div></div>
+          <div class="stat-card"><div class="stat-card-label">Registrados</div><div class="stat-card-value" id="count-pagos">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Realizados</div><div class="stat-card-value green" id="count-pagados">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-pendientes">0</div></div>
         </div>
-      </div>
-
-      <div class="table-card">
-        <div class="table-card-header">
-          <span class="table-card-title">Registros de pago</span>
-          <span class="table-card-count" id="count-label-pagos"></span>
-        </div>
-        <div class="table-wrapper">
+        <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Mes / Año</th><th>Inquilino</th><th>Teléfono</th><th>Inmueble</th>
-                <th>Canon</th><th>Acuerdo</th><th>Monto</th><th>Método</th>
-                <th>Fecha</th><th>Notas</th><th>Estado</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="tabla-pagos">
-              <tr class="empty-row"><td colspan="12">No hay pagos registrados aún.</td></tr>
-            </tbody>
+            <thead><tr>
+              <th>Mes/Año</th><th>Inquilino</th><th>Teléfono</th><th>Inmueble</th>
+              <th>Canon</th><th>Acuerdo</th><th>Monto</th><th>Método</th>
+              <th>Fecha</th><th>Notas</th><th>Estado</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="tabla-pagos"><tr class="empty-row"><td colspan="12">No hay pagos registrados aún.</td></tr></tbody>
           </table>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
 
     <!-- ===================== GASTOS ===================== -->
-    <section id="gastos" class="section">
-      <div class="section-header">
-        <div><h2>Gastos Generales</h2></div>
-        <button class="btn-primary" onclick="openModal('modal-gasto')">+ Registrar Gasto</button>
-      </div>
-
-      <div class="summary-cards">
-        <div class="card card-red">
-          <p class="card-label">Total en dólares</p>
-          <p class="card-value" id="total-gastado-usd">$0</p>
+    <div id="gastos" class="section">
+      <aside class="sidebar">
+        <div class="sidebar-title">Filtros de control</div>
+        <div class="filter-block">
+          <span class="filter-label">Buscar</span>
+          <input type="text" id="filtro-gasto-busqueda" placeholder="Concepto..." oninput="filtrarGastos()" />
         </div>
-        <div class="card card-yellow">
-          <p class="card-label">Total en bolívares</p>
-          <p class="card-value" id="total-gastado-bs" style="font-size:1.1rem;margin-top:4px;">Bs 0,00</p>
+        <div class="filter-block">
+          <span class="filter-label">Mes</span>
+          <select id="filtro-gasto-mes" onchange="filtrarGastos()">
+            <option value="">Todos los meses</option>
+            <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
+            <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
+            <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+          </select>
         </div>
-        <div class="card card-blue">
-          <p class="card-label">Gastos registrados</p>
-          <p class="card-value" id="count-gastos">0</p>
-        </div>
-        <div class="card card-green">
-          <p class="card-label">Gastos realizados</p>
-          <p class="card-value" id="count-gastos-pagados">0</p>
-        </div>
-        <div class="card card-red">
-          <p class="card-label">Gastos pendientes</p>
-          <p class="card-value" id="count-gastos-pendientes">0</p>
-        </div>
-      </div>
-
-      <div class="filtros">
-        <div class="filtros-titulo">Filtros</div>
-        <div class="filtros-row">
-          <div class="filtro-group">
-            <span class="filtro-label">Buscar</span>
-            <input type="text" id="filtro-gasto-busqueda" placeholder="Buscar..." oninput="filtrarGastos()" />
+        <div class="filter-block">
+          <span class="filter-label">Categoría</span>
+          <div class="pills" id="pills-gasto">
+            <span class="pill" onclick="togglePill(this,'filtro-gasto-categoria','Condominios')">Condominios</span>
+            <span class="pill" onclick="togglePill(this,'filtro-gasto-categoria','Servicios')">Servicios</span>
+            <span class="pill" onclick="togglePill(this,'filtro-gasto-categoria','Nómina')">Nómina</span>
+            <span class="pill" onclick="togglePill(this,'filtro-gasto-categoria','Alcaldía')">Alcaldía</span>
+            <span class="pill" onclick="togglePill(this,'filtro-gasto-categoria','Otros')">Otros</span>
           </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Mes</span>
-            <select id="filtro-gasto-mes" onchange="filtrarGastos()">
-              <option value="">Todos</option>
-              <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
-              <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
-              <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Categoría</span>
-            <select id="filtro-gasto-categoria" onchange="filtrarGastos()">
-              <option value="">Todas</option><option>Condominios</option><option>CANTV</option>
-              <option>Hidrocapital</option><option>Corpoelec</option><option>Nómina</option>
-              <option>Alcaldía</option><option>Otros</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Estado</span>
-            <select id="filtro-gasto-estado" onchange="filtrarGastos()">
-              <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Método</span>
-            <select id="filtro-gasto-metodo" onchange="filtrarGastos()">
-              <option value="">Todos</option><option>Zelle</option><option>Bolívares</option><option>Mixto</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Fecha</span>
-            <input type="date" id="filtro-gasto-fecha" onchange="filtrarGastos()" />
-          </div>
-          <button class="btn-secondary" onclick="limpiarFiltrosGastos()">Limpiar</button>
+          <input type="hidden" id="filtro-gasto-categoria" value="" />
         </div>
-      </div>
-
-      <div class="table-card">
-        <div class="table-card-header">
-          <span class="table-card-title">Registros de gastos</span>
-          <span class="table-card-count" id="count-label-gastos"></span>
+        <div class="filter-block">
+          <span class="filter-label">Servicio</span>
+          <select id="filtro-gasto-servicio" onchange="filtrarGastos()">
+            <option value="">Todos</option>
+            <option>Torre Capital</option><option>Jhonson</option>
+            <option>CANTV Matilde 3.1</option>
+            <option>Hidrocapital Quinta Ilse</option><option>Hidrocapital Matilde</option>
+            <option>Corpoelec Jhonson</option><option>Matilde Servicio General</option>
+            <option>Cachimbo Luz</option><option>Aseo Urbano Cachimbo</option><option>Oficina 3.1</option>
+            <option>Seniat</option><option>Movistar PAPA</option><option>Tunther net</option>
+            <option>Declaración protección pensiones</option>
+            <option>Quinta Liria</option><option>Quinta Ilse</option>
+            <option>Torre Capital</option><option>Terreno Cachimbo</option>
+            <option>Quinta Diosanise</option><option>Matilde</option>
+            <option>Contable</option><option>Guillermo</option><option>Juan</option><option>Liliana</option>
+          </select>
         </div>
-        <div class="table-wrapper">
+        <div class="filter-block">
+          <span class="filter-label">Estado</span>
+          <select id="filtro-gasto-estado" onchange="filtrarGastos()">
+            <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <span class="filter-label">Método</span>
+          <select id="filtro-gasto-metodo" onchange="filtrarGastos()">
+            <option value="">Todos</option><option>Zelle</option><option>Dólares</option><option>Bolívares</option><option>Mixto</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <span class="filter-label">Fecha</span>
+          <input type="date" id="filtro-gasto-fecha" onchange="filtrarGastos()" />
+        </div>
+        <button class="btn-limpiar" onclick="limpiarFiltrosGastos()">Limpiar Filtros</button>
+      </aside>
+      <main class="main-content">
+        <div class="page-title">Gastos Generales</div>
+        <div class="page-sub">Consolidado de egresos y mantenimiento</div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-card-label">Total USD</div><div class="stat-card-value" id="total-gastado-usd">$0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Total Bs</div><div class="stat-card-value small" id="total-gastado-bs">Bs 0,00</div></div>
+          <div class="stat-card"><div class="stat-card-label">Registrados</div><div class="stat-card-value" id="count-gastos">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Realizados</div><div class="stat-card-value green" id="count-gastos-pagados">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-gastos-pendientes">0</div></div>
+        </div>
+        <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Mes / Año</th><th>Nombre</th><th>Descripción</th><th>Categoría</th>
-                <th>Monto</th><th>Método</th><th>Fecha</th><th>Notas</th><th>Estado</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="tabla-gastos">
-              <tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr>
-            </tbody>
+            <thead><tr>
+              <th>Mes/Año</th><th>Inmueble</th><th>Categoría</th><th>Servicio</th>
+              <th>Monto</th><th>Método</th><th>Fecha</th><th>Notas</th><th>Estado</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="tabla-gastos"><tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr></tbody>
           </table>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
 
     <!-- ===================== CASA NONNA ===================== -->
-    <section id="nonna" class="section">
-      <div class="section-header">
-        <div><h2>Casa Nonna</h2></div>
-        <button class="btn-primary" onclick="openModal('modal-nonna')">+ Registrar Gasto</button>
-      </div>
-
-      <div class="summary-cards">
-        <div class="card card-red">
-          <p class="card-label">Total en dólares</p>
-          <p class="card-value" id="total-nonna-usd">$0</p>
+    <div id="nonna" class="section">
+      <aside class="sidebar">
+        <div class="sidebar-title">Filtros de control</div>
+        <div class="filter-block">
+          <span class="filter-label">Buscar</span>
+          <input type="text" id="filtro-nonna-busqueda" placeholder="Concepto..." oninput="filtrarNonna()" />
         </div>
-        <div class="card card-yellow">
-          <p class="card-label">Total en bolívares</p>
-          <p class="card-value" id="total-nonna-bs" style="font-size:1.1rem;margin-top:4px;">Bs 0,00</p>
+        <div class="filter-block">
+          <span class="filter-label">Mes</span>
+          <select id="filtro-nonna-mes" onchange="filtrarNonna()">
+            <option value="">Todos los meses</option>
+            <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
+            <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
+            <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+          </select>
         </div>
-        <div class="card card-blue">
-          <p class="card-label">Gastos registrados</p>
-          <p class="card-value" id="count-nonna">0</p>
-        </div>
-        <div class="card card-green">
-          <p class="card-label">Gastos realizados</p>
-          <p class="card-value" id="count-nonna-pagados">0</p>
-        </div>
-        <div class="card card-red">
-          <p class="card-label">Gastos pendientes</p>
-          <p class="card-value" id="count-nonna-pendientes">0</p>
-        </div>
-      </div>
-
-      <div class="filtros">
-        <div class="filtros-titulo">Filtros</div>
-        <div class="filtros-row">
-          <div class="filtro-group">
-            <span class="filtro-label">Buscar</span>
-            <input type="text" id="filtro-nonna-busqueda" placeholder="Buscar..." oninput="filtrarNonna()" />
+        <div class="filter-block">
+          <span class="filter-label">Categoría</span>
+          <div class="pills" id="pills-nonna">
+            <span class="pill" onclick="togglePill(this,'filtro-nonna-categoria','Servicios')">Servicios</span>
+            <span class="pill" onclick="togglePill(this,'filtro-nonna-categoria','Cuidadoras')">Cuidadoras</span>
+            <span class="pill" onclick="togglePill(this,'filtro-nonna-categoria','Alimentación')">Alimentación</span>
+            <span class="pill" onclick="togglePill(this,'filtro-nonna-categoria','Medicina')">Medicina</span>
+            <span class="pill" onclick="togglePill(this,'filtro-nonna-categoria','Otros')">Otros</span>
           </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Mes</span>
-            <select id="filtro-nonna-mes" onchange="filtrarNonna()">
-              <option value="">Todos</option>
-              <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
-              <option>Mayo</option><option>Junio</option><option>Julio</option><option>Agosto</option>
-              <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Categoría</span>
-            <select id="filtro-nonna-categoria" onchange="filtrarNonna()">
-              <option value="">Todas</option><option>Servicios</option><option>Cuidadoras</option>
-              <option>Alimentación</option><option>Medicina</option><option>Otros</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Estado</span>
-            <select id="filtro-nonna-estado" onchange="filtrarNonna()">
-              <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Método</span>
-            <select id="filtro-nonna-metodo" onchange="filtrarNonna()">
-              <option value="">Todos</option><option>Zelle</option><option>Bolívares</option><option>Mixto</option>
-            </select>
-          </div>
-          <div class="filtro-group">
-            <span class="filtro-label">Fecha</span>
-            <input type="date" id="filtro-nonna-fecha" onchange="filtrarNonna()" />
-          </div>
-          <button class="btn-secondary" onclick="limpiarFiltrosNonna()">Limpiar</button>
+          <input type="hidden" id="filtro-nonna-categoria" value="" />
         </div>
-      </div>
-
-      <div class="table-card">
-        <div class="table-card-header">
-          <span class="table-card-title">Gastos Casa Nonna</span>
-          <span class="table-card-count" id="count-label-nonna"></span>
+        <div class="filter-block">
+          <span class="filter-label">Servicio</span>
+          <select id="filtro-nonna-servicio" onchange="filtrarNonna()">
+            <option value="">Todos</option>
+            <option>Hidrocapital</option><option>Cantv</option><option>Corpoelec</option>
+            <option>Aseo urbano</option><option>Simple TV</option><option>Movistar</option>
+            <option>Botellones de agua</option><option>Rosa</option><option>Nazaret</option>
+            <option>Muchacha 2</option><option>Mercado</option><option>Mensualidad tío</option>
+            <option>Carro tío</option><option>Pollo</option><option>Carne</option>
+            <option>Pescado</option><option>Medicina</option>
+          </select>
         </div>
-        <div class="table-wrapper">
+        <div class="filter-block">
+          <span class="filter-label">Estado</span>
+          <select id="filtro-nonna-estado" onchange="filtrarNonna()">
+            <option value="">Todos</option><option>Pagado</option><option>No pagado</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <span class="filter-label">Método</span>
+          <select id="filtro-nonna-metodo" onchange="filtrarNonna()">
+            <option value="">Todos</option><option>Zelle</option><option>Dólares</option><option>Bolívares</option><option>Mixto</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <span class="filter-label">Fecha</span>
+          <input type="date" id="filtro-nonna-fecha" onchange="filtrarNonna()" />
+        </div>
+        <button class="btn-limpiar" onclick="limpiarFiltrosNonna()">Limpiar Filtros</button>
+      </aside>
+      <main class="main-content">
+        <div class="page-title">Casa Nonna</div>
+        <div class="page-sub">Control de gastos del hogar y cuidados</div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-card-label">Total USD</div><div class="stat-card-value" id="total-nonna-usd">$0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Total Bs</div><div class="stat-card-value small" id="total-nonna-bs">Bs 0,00</div></div>
+          <div class="stat-card"><div class="stat-card-label">Registrados</div><div class="stat-card-value" id="count-nonna">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Realizados</div><div class="stat-card-value green" id="count-nonna-pagados">0</div></div>
+          <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-nonna-pendientes">0</div></div>
+        </div>
+        <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Mes / Año</th><th>Nombre</th><th>Descripción</th><th>Categoría</th>
-                <th>Monto</th><th>Método</th><th>Fecha</th><th>Notas</th><th>Estado</th><th></th>
-              </tr>
-            </thead>
-            <tbody id="tabla-nonna">
-              <tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr>
-            </tbody>
+            <thead><tr>
+              <th>Mes/Año</th><th>Nombre</th><th>Categoría</th><th>Servicio</th>
+              <th>Monto</th><th>Método</th><th>Fecha</th><th>Notas</th><th>Estado</th><th>Acciones</th>
+            </tr></thead>
+            <tbody id="tabla-nonna"><tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr></tbody>
           </table>
         </div>
-      </div>
-    </section>
+      </main>
+    </div>
 
-  </main>
+  </div>
 
   <!-- ===================== MODAL PAGO ===================== -->
   <div id="modal-pago" class="modal-overlay" onclick="closeModalOutside(event,'modal-pago')">
@@ -329,8 +270,7 @@
       </div>
       <form id="form-pago" onsubmit="registrarPago(event)">
         <div class="form-row">
-          <div class="form-group">
-            <label>Mes</label>
+          <div class="form-group"><label>Mes</label>
             <select id="pago-mes">
               <option value="">Selecciona...</option>
               <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
@@ -338,25 +278,15 @@
               <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Año</label>
-            <input type="number" id="pago-anio" value="2026" min="2020" max="2100" />
-          </div>
+          <div class="form-group"><label>Año</label><input type="number" id="pago-anio" value="2026" min="2020" max="2100" /></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Nombre del inquilino</label>
-            <input type="text" id="pago-inquilino" placeholder="Nombre completo" required />
-          </div>
-          <div class="form-group">
-            <label>Teléfono</label>
-            <input type="tel" id="pago-telefono" placeholder="Ej: 0412-1234567" />
-          </div>
+          <div class="form-group"><label>Nombre del inquilino</label><input type="text" id="pago-inquilino" placeholder="Nombre completo" required /></div>
+          <div class="form-group"><label>Teléfono</label><input type="tel" id="pago-telefono" placeholder="0412-1234567" /></div>
         </div>
-        <div class="form-group">
-          <label>Inmueble</label>
+        <div class="form-group"><label>Inmueble</label>
           <select id="pago-inmueble" required>
-            <option value="" disabled selected>Selecciona un inmueble...</option>
+            <option value="" disabled selected>Selecciona...</option>
             <optgroup label="EDIFICIO DOÑA MATILDE">
               <option value="MATILDE PB">MATILDE PB</option><option value="MATILDE ANEXO">MATILDE ANEXO</option>
               <option value="MATILDE 1.1">MATILDE 1.1</option><option value="MATILDE 1.2">MATILDE 1.2</option>
@@ -376,50 +306,33 @@
           </select>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Canon mensual (USD)</label>
-            <input type="number" id="pago-canon" placeholder="0.00" min="0" step="0.01" />
-          </div>
-          <div class="form-group">
-            <label>Acuerdo de pago</label>
+          <div class="form-group"><label>Canon mensual (USD)</label><input type="number" id="pago-canon" placeholder="0.00" min="0" step="0.01" /></div>
+          <div class="form-group"><label>Acuerdo de pago</label>
             <select id="pago-acuerdo">
-              <option>Mensual</option><option>Bimestral</option><option>Trimestral</option>
-              <option>Anual</option><option>Pago único</option>
+              <option>Mensual</option><option>Bimestral</option><option>Trimestral</option><option>Anual</option><option>Pago único</option>
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label>Método de pago</label>
+        <div class="form-group"><label>Método de pago</label>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="pago-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-usd">Zelle</span></label>
+            <label class="radio-label"><input type="radio" name="pago-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-usd">Dólares</span></label>
             <label class="radio-label"><input type="radio" name="pago-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-bs">Bolívares</span></label>
             <label class="radio-label"><input type="radio" name="pago-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
           </div>
         </div>
-        <div class="form-group">
-          <label>Monto (USD)</label>
-          <input type="number" id="pago-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" />
-        </div>
+        <div class="form-group"><label>Monto (USD)</label><input type="number" id="pago-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
         <div id="pago-campos-bs" style="display:none;">
           <div class="bs-box">
             <div class="form-row">
-              <div class="form-group">
-                <label>Tipo de tasa</label>
+              <div class="form-group"><label>Tipo de tasa</label>
                 <select id="pago-tipo-tasa" onchange="onTipoTasaChangeGeneric(this.value,'pago')">
-                  <option value="BCV dólar">BCV dólar</option>
-                  <option value="BCV euro">BCV euro</option>
-                  <option value="Tasa personalizada">Tasa personalizada</option>
+                  <option value="BCV dólar">BCV dólar</option><option value="BCV euro">BCV euro</option><option value="Tasa personalizada">Tasa personalizada</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label>Tasa (Bs/$)</label>
-                <input type="number" id="pago-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" />
-              </div>
+              <div class="form-group"><label>Tasa (Bs/$)</label><input type="number" id="pago-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
             </div>
-            <div class="resultado-bs">
-              <span class="resultado-label">Total en bolívares:</span>
-              <span class="resultado-valor" id="pago-resultado-bs">Bs 0,00</span>
-            </div>
+            <div class="resultado-bs"><span class="resultado-label">Total en bolívares:</span><span class="resultado-valor" id="pago-resultado-bs">Bs 0,00</span></div>
           </div>
         </div>
         <div id="pago-campos-mix" style="display:none;">
@@ -429,30 +342,21 @@
               <div class="form-group"><label>Monto en Bs</label><input type="number" id="pago-mix-monto-bs" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
             </div>
             <div class="form-row">
-              <div class="form-group"><label>Tasa de conversión (Bs/$)</label><input type="number" id="pago-mix-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
-              <div class="form-group" style="display:flex;align-items:flex-end;">
-                <div class="resultado-bs" style="width:100%;margin-top:0;"><span class="resultado-label">Bs equivalente:</span><span class="resultado-valor" id="pago-mix-resultado">Bs 0,00</span></div>
-              </div>
+              <div class="form-group"><label>Tasa (Bs/$)</label><input type="number" id="pago-mix-tasa" placeholder="Ej: 40.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
+              <div class="form-group" style="display:flex;align-items:flex-end;"><div class="resultado-bs" style="width:100%;margin-top:0;"><span class="resultado-label">Bs equiv:</span><span class="resultado-valor" id="pago-mix-resultado">Bs 0,00</span></div></div>
             </div>
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Fecha de pago</label>
-            <input type="date" id="pago-fecha" required />
-          </div>
-          <div class="form-group">
-            <label>Estado</label>
+          <div class="form-group"><label>Fecha de pago</label><input type="date" id="pago-fecha" required /></div>
+          <div class="form-group"><label>Estado</label>
             <div class="radio-group" style="margin-top:6px">
               <label class="radio-label"><input type="radio" name="pago-estado" value="Pagado" checked /><span class="radio-text pagado">Pagado</span></label>
               <label class="radio-label"><input type="radio" name="pago-estado" value="No pagado" /><span class="radio-text no-pagado">No pagado</span></label>
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <label>Notas (opcional)</label>
-          <textarea id="pago-notas" placeholder="Observaciones..." rows="2"></textarea>
-        </div>
+        <div class="form-group"><label>Notas (opcional)</label><textarea id="pago-notas" placeholder="Observaciones..." rows="2"></textarea></div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeModal('modal-pago')">Cancelar</button>
           <button type="submit" class="btn-primary">Guardar</button>
@@ -470,8 +374,7 @@
       </div>
       <form id="form-gasto" onsubmit="registrarGasto(event)">
         <div class="form-row">
-          <div class="form-group">
-            <label>Mes</label>
+          <div class="form-group"><label>Mes</label>
             <select id="gasto-mes">
               <option value="">Selecciona...</option>
               <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
@@ -479,38 +382,55 @@
               <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Año</label>
-            <input type="number" id="gasto-anio" value="2026" min="2020" max="2100" />
-          </div>
+          <div class="form-group"><label>Año</label><input type="number" id="gasto-anio" value="2026" min="2020" max="2100" /></div>
         </div>
-        <div class="form-group">
-          <label>Nombre del gasto</label>
-          <input type="text" id="gasto-nombre" placeholder="Ej: Hidrocapital Matilde" required />
-        </div>
-        <div class="form-group">
-          <label>Descripción</label>
-          <textarea id="gasto-descripcion" placeholder="Detalles..." rows="2"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Categoría</label>
-          <select id="gasto-categoria">
-            <option>Condominios</option><option>CANTV</option><option>Hidrocapital</option>
-            <option>Corpoelec</option><option>Nómina</option><option>Alcaldía</option><option>Otros</option>
+        <div class="form-group"><label>Inmueble</label>
+          <select id="gasto-inmueble">
+            <option value="" selected>General / Sin inmueble</option>
+            <optgroup label="EDIFICIO DOÑA MATILDE">
+              <option value="MATILDE PB">MATILDE PB</option><option value="MATILDE ANEXO">MATILDE ANEXO</option>
+              <option value="MATILDE 1.1">MATILDE 1.1</option><option value="MATILDE 1.2">MATILDE 1.2</option>
+              <option value="MATILDE 2.1">MATILDE 2.1</option><option value="MATILDE 2.2">MATILDE 2.2</option>
+              <option value="MATILDE 3.1">MATILDE 3.1</option><option value="MATILDE 3.2">MATILDE 3.2</option>
+              <option value="MATILDE 4">MATILDE 4</option>
+            </optgroup>
+            <optgroup label="QUINTA ILSE">
+              <option value="QUINTA ILSE PB">PB</option><option value="QUINTA ILSE PISO 1">Piso 1</option><option value="QUINTA ILSE PISO 2">Piso 2</option>
+            </optgroup>
+            <optgroup label="QUINTA LIRIA"><option value="QUINTA LIRIA LOCAL">Local</option></optgroup>
+            <optgroup label="TORRE SAMAN"><option value="TORRE SAMAN OFICINA 64">Oficina 64</option></optgroup>
+            <optgroup label="RESIDENCIA LOS MONJES"><option value="LOS MONJES 1-A">1-A</option></optgroup>
+            <optgroup label="RESIDENCIA SOLANO"><option value="SOLANO 7-C">7-C</option></optgroup>
+            <optgroup label="TORRE CAPITAL"><option value="TORRE CAPITAL 7-D">7-D</option></optgroup>
+            <optgroup label="EDIFICIO JOHNSON"><option value="JOHNSON 4-A">4-A</option></optgroup>
           </select>
         </div>
-        <div class="form-group">
-          <label>Método de pago</label>
+        <div class="form-group"><label>Categoría</label>
+          <select id="gasto-categoria" onchange="toggleSubcategoriaGasto(this.value)">
+            <option>Condominios</option>
+            <option>Servicios</option>
+            <option>Nómina</option>
+            <option>Alcaldía</option>
+            <option>Otros</option>
+          </select>
+        </div>
+        <div id="gasto-seccion-servicio" style="display:none;">
+          <div class="form-group"><label>Especificar</label>
+            <select id="gasto-servicio">
+              <option value="">Selecciona...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Descripción</label><textarea id="gasto-descripcion" placeholder="Detalles..." rows="2"></textarea></div>
+        <div class="form-group"><label>Método de pago</label>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="gasto-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-usd">Zelle</span></label>
+            <label class="radio-label"><input type="radio" name="gasto-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-usd">Dólares</span></label>
             <label class="radio-label"><input type="radio" name="gasto-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-bs">Bolívares</span></label>
             <label class="radio-label"><input type="radio" name="gasto-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
           </div>
         </div>
-        <div class="form-group">
-          <label>Monto (USD)</label>
-          <input type="number" id="gasto-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('gasto')" />
-        </div>
+        <div class="form-group"><label>Monto (USD)</label><input type="number" id="gasto-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('gasto')" /></div>
         <div id="gasto-campos-bs" style="display:none;">
           <div class="bs-box">
             <div class="form-row">
@@ -554,7 +474,7 @@
     </div>
   </div>
 
-  <!-- ===================== MODAL CASA NONNA ===================== -->
+  <!-- ===================== MODAL NONNA ===================== -->
   <div id="modal-nonna" class="modal-overlay" onclick="closeModalOutside(event,'modal-nonna')">
     <div class="modal">
       <div class="modal-header">
@@ -563,8 +483,7 @@
       </div>
       <form id="form-nonna" onsubmit="registrarNonna(event)">
         <div class="form-row">
-          <div class="form-group">
-            <label>Mes</label>
+          <div class="form-group"><label>Mes</label>
             <select id="nonna-mes">
               <option value="">Selecciona...</option>
               <option>Enero</option><option>Febrero</option><option>Marzo</option><option>Abril</option>
@@ -572,45 +491,60 @@
               <option>Septiembre</option><option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Año</label>
-            <input type="number" id="nonna-anio" value="2026" min="2020" max="2100" />
-          </div>
+          <div class="form-group"><label>Año</label><input type="number" id="nonna-anio" value="2026" min="2020" max="2100" /></div>
         </div>
-        <div class="form-group">
-          <label>Nombre del gasto</label>
-          <input type="text" id="nonna-nombre" placeholder="Ej: Medicina mensual" required />
-        </div>
-        <div class="form-group">
-          <label>Descripción</label>
-          <textarea id="nonna-descripcion" placeholder="Detalles..." rows="2"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Categoría</label>
-          <select id="nonna-categoria">
+        <div class="form-group"><label>Nombre del gasto</label><input type="text" id="nonna-nombre" placeholder="Ej: Comida Domingo" required /></div>
+        <div class="form-group"><label>Categoría</label>
+          <select id="nonna-categoria" onchange="toggleSubcategoriaNonna(this.value)">
             <option>Servicios</option><option>Cuidadoras</option>
             <option>Alimentación</option><option>Medicina</option><option>Otros</option>
           </select>
         </div>
-        <div id="seccion-cuidadoras" style="display:none;">
-          <div class="form-group">
-            <label>Cuidadoras</label>
-            <div id="lista-cuidadoras"></div>
-            <button type="button" class="btn-secondary" style="margin-top:8px;font-size:0.78rem;padding:5px 12px;" onclick="agregarCuidadora()">+ Agregar cuidadora</button>
+        <div id="seccion-servicios-nonna" style="display:block;">
+          <div class="form-group"><label>Tipo de servicio</label>
+            <select id="nonna-servicio">
+              <option value="">Selecciona...</option>
+              <option>Hidrocapital</option><option>Cantv</option><option>Corpoelec</option>
+              <option>Aseo urbano</option><option>Simple TV</option><option>Movistar</option>
+            </select>
           </div>
         </div>
-        <div class="form-group">
-          <label>Método de pago</label>
+        <div id="seccion-cuidadoras" style="display:none;">
+          <div class="form-group"><label>Cuidadora</label>
+            <select id="nonna-cuidadora">
+              <option value="">Selecciona...</option>
+              <option>Ángela</option>
+            </select>
+          </div>
+          <div id="lista-cuidadoras-extra"></div>
+          <button type="button" class="btn-secondary" style="margin-top:8px;font-size:0.78rem;padding:5px 12px;" onclick="agregarCuidadora()">+ Agregar cuidadora</button>
+        </div>
+        <div id="seccion-alimentacion" style="display:none;">
+          <div class="form-group"><label>Tipo</label>
+            <select id="nonna-alimentacion">
+              <option value="">Selecciona...</option>
+              <option>Mercado</option><option>Pollo</option><option>Carne</option><option>Pescado</option><option>Botellones de agua</option>
+            </select>
+          </div>
+        </div>
+        <div id="seccion-otros-nonna" style="display:none;">
+          <div class="form-group"><label>Tipo</label>
+            <select id="nonna-otro">
+              <option value="">Selecciona...</option>
+              <option>Mensualidad tío</option><option>Carro tío</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Descripción</label><textarea id="nonna-descripcion" placeholder="Detalles..." rows="2"></textarea></div>
+        <div class="form-group"><label>Método de pago</label>
           <div class="radio-group">
             <label class="radio-label"><input type="radio" name="nonna-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-usd">Zelle</span></label>
+            <label class="radio-label"><input type="radio" name="nonna-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-usd">Dólares</span></label>
             <label class="radio-label"><input type="radio" name="nonna-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-bs">Bolívares</span></label>
             <label class="radio-label"><input type="radio" name="nonna-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
           </div>
         </div>
-        <div class="form-group">
-          <label>Monto (USD)</label>
-          <input type="number" id="nonna-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('nonna')" />
-        </div>
+        <div class="form-group"><label>Monto (USD)</label><input type="number" id="nonna-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('nonna')" /></div>
         <div id="nonna-campos-bs" style="display:none;">
           <div class="bs-box">
             <div class="form-row">
@@ -656,11 +590,67 @@
 
   <script src="app.js"></script>
   <script>
-    document.getElementById('nonna-categoria').addEventListener('change', function() {
-      const sec = document.getElementById('seccion-cuidadoras');
-      sec.style.display = this.value === 'Cuidadoras' ? 'block' : 'none';
-      if (this.value === 'Cuidadoras') renderCuidadoras();
-    });
+    const GASTO_SERVICIOS = {
+      'Condominios': [],
+      'Servicios': ['CANTV Matilde 3.1','Hidrocapital Quinta Ilse','Hidrocapital Matilde','Corpoelec Jhonson','Matilde Servicio General','Cachimbo Luz','Aseo Urbano Cachimbo','Oficina 3.1'],
+      'Nómina': ['Contable','Guillermo','Juan','Liliana'],
+      'Alcaldía': ['Quinta Liria','Quinta Ilse','Torre Capital','Terreno Cachimbo','Quinta Diosanise','Matilde'],
+      'Otros': ['Seniat','Movistar PAPA','Tunther net','Declaración protección pensiones']
+    };
+
+    function toggleSubcategoriaGasto(valor) {
+      const seccion = document.getElementById('gasto-seccion-servicio');
+      const select  = document.getElementById('gasto-servicio');
+      const opciones = GASTO_SERVICIOS[valor] || [];
+      if (opciones.length === 0) {
+        seccion.style.display = 'none';
+      } else {
+        seccion.style.display = 'block';
+        select.innerHTML = '<option value="">Selecciona...</option>' +
+          opciones.map(o => `<option>${o}</option>`).join('');
+      }
+    }
+
+    function toggleSubcategoriaNonna(valor) {
+      document.getElementById('seccion-servicios-nonna').style.display = valor === 'Servicios'    ? 'block' : 'none';
+      document.getElementById('seccion-cuidadoras').style.display      = valor === 'Cuidadoras'   ? 'block' : 'none';
+      document.getElementById('seccion-alimentacion').style.display    = valor === 'Alimentación' ? 'block' : 'none';
+      document.getElementById('seccion-otros-nonna').style.display     = valor === 'Otros'        ? 'block' : 'none';
+      if (valor === 'Cuidadoras') renderCuidadoras();
+    }
+
+    function togglePill(el, inputId, valor) {
+      const input = document.getElementById(inputId);
+      const pills = el.parentElement.querySelectorAll('.pill');
+      if (el.classList.contains('active')) {
+        el.classList.remove('active');
+        input.value = '';
+      } else {
+        pills.forEach(p => p.classList.remove('active'));
+        el.classList.add('active');
+        input.value = valor;
+      }
+      if (inputId.includes('gasto')) filtrarGastos();
+      else filtrarNonna();
+    }
+
+    function openModalActivo() {
+      const activo = document.querySelector('.section.active');
+      if (activo.id === 'pagos')  openModal('modal-pago');
+      if (activo.id === 'gastos') { toggleSubcategoriaGasto('Condominios'); openModal('modal-gasto'); }
+      if (activo.id === 'nonna')  openModal('modal-nonna');
+    }
+
+    function showSection(id, btn) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.topbar-nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+      const labels = { pagos: '+ Registrar Pago', gastos: '+ Registrar Gasto', nonna: '+ Registrar Gasto' };
+      document.getElementById('btn-registrar').textContent = labels[id];
+    }
+
+    toggleSubcategoriaGasto('Condominios');
   </script>
 </body>
 </html>

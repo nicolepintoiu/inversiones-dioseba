@@ -46,12 +46,7 @@ async function dbDelete(tabla, id) {
 // NAVEGACIÓN Y MODALES
 // =============================================================
 
-function showSection(id, btn) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-}
+// showSection handled in HTML inline script
 
 function openModal(id) {
   const today = new Date().toISOString().split('T')[0];
@@ -152,14 +147,13 @@ function formatDate(dateStr) {
 }
 
 function badgeEstado(estado) {
-  if (!estado) return '<span class="badge badge-red">No pagado</span>';
-  const clases = { 'Pagado': 'badge-green', 'No pagado': 'badge-red' };
-  return `<span class="badge ${clases[estado] || 'badge-red'}">${estado}</span>`;
+  if (!estado || estado === 'No pagado') return '<span class="estado-dot"><span class="dot dot-red"></span>No pagado</span>';
+  if (estado === 'Pagado') return '<span class="estado-dot"><span class="dot dot-green"></span>Pagado</span>';
+  return '<span class="estado-dot"><span class="dot dot-orange"></span>' + estado + '</span>';
 }
 
 function badgeMetodo(metodo) {
-  const clases = { 'Zelle': 'badge-blue', 'Bolívares': 'badge-yellow', 'Mixto': 'badge-purple' };
-  return `<span class="badge ${clases[metodo] || 'badge-blue'}">${metodo || 'Zelle'}</span>`;
+  return `<span class="method-badge">${metodo || 'Zelle'}</span>`;
 }
 
 function formatMontoTabla(row) {
@@ -406,6 +400,7 @@ async function cargarGastos() {
 function filtrarGastos() {
   const busqueda  = document.getElementById('filtro-gasto-busqueda')?.value.toLowerCase() || '';
   const categoria = document.getElementById('filtro-gasto-categoria')?.value || '';
+  const servicio  = document.getElementById('filtro-gasto-servicio')?.value || '';
   const estado    = document.getElementById('filtro-gasto-estado')?.value || '';
   const metodo    = document.getElementById('filtro-gasto-metodo')?.value || '';
   const mes       = document.getElementById('filtro-gasto-mes')?.value || '';
@@ -414,6 +409,7 @@ function filtrarGastos() {
   const filtrados = _gastos.filter(g => {
     if (busqueda && !(g.nombre||'').toLowerCase().includes(busqueda)) return false;
     if (categoria && g.categoria !== categoria) return false;
+    if (servicio && g.servicio !== servicio) return false;
     if (estado && g.estado !== estado) return false;
     if (metodo && g.metodo !== metodo) return false;
     if (mes && g.mes !== mes) return false;
@@ -434,7 +430,7 @@ function renderGastos(gastos) {
       <td>${g.mes || '-'} ${g.anio || ''}</td>
       <td>${g.nombre || '-'}</td>
       <td>${g.descripcion || '-'}</td>
-      <td><span class="badge badge-blue">${g.categoria}</span></td>
+      <td><span class="cat-badge cat-blue">${g.categoria}</span></td>
       <td>${formatMontoTabla(g)}</td>
       <td>${badgeMetodo(g.metodo)}</td>
       <td>${formatDate(g.fecha)}</td>
@@ -487,6 +483,7 @@ async function registrarGasto(e) {
     fecha:       document.getElementById('gasto-fecha').value,
     estado:      estadoRadio ? estadoRadio.value : 'No pagado',
     notas:       document.getElementById('gasto-notas').value.trim(),
+    servicio:    document.getElementById('gasto-servicio')?.value || null,
     ...metodoData,
   };
 
@@ -552,7 +549,7 @@ async function eliminarGasto(id) {
 }
 
 function limpiarFiltrosGastos() {
-  ['filtro-gasto-busqueda','filtro-gasto-categoria','filtro-gasto-estado','filtro-gasto-metodo','filtro-gasto-mes','filtro-gasto-fecha']
+  ['filtro-gasto-busqueda','filtro-gasto-categoria','filtro-gasto-servicio','filtro-gasto-estado','filtro-gasto-metodo','filtro-gasto-mes','filtro-gasto-fecha']
     .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   filtrarGastos();
 }
@@ -579,6 +576,7 @@ async function cargarNonna() {
 function filtrarNonna() {
   const busqueda  = document.getElementById('filtro-nonna-busqueda')?.value.toLowerCase() || '';
   const categoria = document.getElementById('filtro-nonna-categoria')?.value || '';
+  const servicio  = document.getElementById('filtro-nonna-servicio')?.value || '';
   const estado    = document.getElementById('filtro-nonna-estado')?.value || '';
   const metodo    = document.getElementById('filtro-nonna-metodo')?.value || '';
   const mes       = document.getElementById('filtro-nonna-mes')?.value || '';
@@ -587,6 +585,7 @@ function filtrarNonna() {
   const filtrados = _nonna.filter(n => {
     if (busqueda && !(n.nombre||'').toLowerCase().includes(busqueda)) return false;
     if (categoria && n.categoria !== categoria) return false;
+    if (servicio && n.servicio !== servicio) return false;
     if (estado && n.estado !== estado) return false;
     if (metodo && n.metodo !== metodo) return false;
     if (mes && n.mes !== mes) return false;
@@ -660,6 +659,7 @@ async function registrarNonna(e) {
     fecha:       document.getElementById('nonna-fecha').value,
     estado:      estadoRadio ? estadoRadio.value : 'No pagado',
     notas:       document.getElementById('nonna-notas').value.trim(),
+    servicio:    document.getElementById('nonna-servicio')?.value || document.getElementById('nonna-cuidadora')?.value || document.getElementById('nonna-alimentacion')?.value || document.getElementById('nonna-otro')?.value || null,
     ...metodoData,
   };
 
@@ -692,6 +692,7 @@ async function editarNonna(id) {
     document.getElementById('nonna-categoria').value   = n.categoria;
     document.getElementById('nonna-fecha').value       = n.fecha;
     document.getElementById('nonna-notas').value       = n.notas || '';
+    if (n.servicio) document.getElementById('nonna-servicio').value = n.servicio;
 
     const radioMetodo = document.querySelector(`input[name="nonna-metodo"][value="${n.metodo || 'Zelle'}"]`);
     if (radioMetodo) { radioMetodo.checked = true; toggleMetodoPago(n.metodo, 'nonna'); }
@@ -725,7 +726,7 @@ async function eliminarNonna(id) {
 }
 
 function limpiarFiltrosNonna() {
-  ['filtro-nonna-busqueda','filtro-nonna-categoria','filtro-nonna-estado','filtro-nonna-metodo','filtro-nonna-mes','filtro-nonna-fecha']
+  ['filtro-nonna-busqueda','filtro-nonna-categoria','filtro-nonna-servicio','filtro-nonna-estado','filtro-nonna-metodo','filtro-nonna-mes','filtro-nonna-fecha']
     .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
   filtrarNonna();
 }
