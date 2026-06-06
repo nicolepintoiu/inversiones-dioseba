@@ -82,6 +82,7 @@
           <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-pendientes">0</div></div>
         </div>
         <div class="table-wrap">
+          <div class="table-scroll">
           <table>
             <thead><tr>
               <th>Mes/Año</th><th>Inquilino</th><th>Teléfono</th><th>Inmueble</th>
@@ -90,6 +91,7 @@
             </tr></thead>
             <tbody id="tabla-pagos"><tr class="empty-row"><td colspan="12">No hay pagos registrados aún.</td></tr></tbody>
           </table>
+          </div>
         </div>
       </main>
     </div>
@@ -168,6 +170,7 @@
           <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-gastos-pendientes">0</div></div>
         </div>
         <div class="table-wrap">
+          <div class="table-scroll">
           <table>
             <thead><tr>
               <th>Mes/Año</th><th>Inmueble</th><th>Categoría</th><th>Servicio</th>
@@ -175,6 +178,7 @@
             </tr></thead>
             <tbody id="tabla-gastos"><tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr></tbody>
           </table>
+          </div>
         </div>
       </main>
     </div>
@@ -248,6 +252,7 @@
           <div class="stat-card"><div class="stat-card-label">Pendientes</div><div class="stat-card-value red" id="count-nonna-pendientes">0</div></div>
         </div>
         <div class="table-wrap">
+          <div class="table-scroll">
           <table>
             <thead><tr>
               <th>Mes/Año</th><th>Nombre</th><th>Categoría</th><th>Servicio</th>
@@ -255,6 +260,7 @@
             </tr></thead>
             <tbody id="tabla-nonna"><tr class="empty-row"><td colspan="10">No hay gastos registrados aún.</td></tr></tbody>
           </table>
+          </div>
         </div>
       </main>
     </div>
@@ -265,7 +271,10 @@
   <div id="modal-pago" class="modal-overlay" onclick="closeModalOutside(event,'modal-pago')">
     <div class="modal">
       <div class="modal-header">
-        <h3>Registrar Pago</h3>
+        <div>
+          <h3 id="modal-pago-title">Registrar Pago</h3>
+          <p class="modal-subtitle">Registro de canon · Inquilino</p>
+        </div>
         <button class="close-btn" onclick="closeModal('modal-pago')">✕</button>
       </div>
       <form id="form-pago" onsubmit="registrarPago(event)">
@@ -314,12 +323,13 @@
           </div>
         </div>
         <div class="form-group"><label>Método de pago</label>
-          <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="pago-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-usd">Zelle</span></label>
-            <label class="radio-label"><input type="radio" name="pago-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-usd">Dólares</span></label>
-            <label class="radio-label"><input type="radio" name="pago-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text moneda-bs">Bolívares</span></label>
-            <label class="radio-label"><input type="radio" name="pago-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'pago')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
+          <div class="metodo-chips">
+            <button type="button" class="metodo-chip active" onclick="selectMetodo(this,'pago','Zelle')">Zelle</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'pago','Dólares')">Dólares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'pago','Bolívares')">Bolívares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'pago','Mixto')">Mixto</button>
           </div>
+          <input type="hidden" id="pago-metodo-val" value="Zelle" />
         </div>
         <div class="form-group"><label>Monto (USD)</label><input type="number" id="pago-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('pago')" /></div>
         <div id="pago-campos-bs" style="display:none;">
@@ -350,10 +360,11 @@
         <div class="form-row">
           <div class="form-group"><label>Fecha de pago</label><input type="date" id="pago-fecha" required /></div>
           <div class="form-group"><label>Estado</label>
-            <div class="radio-group" style="margin-top:6px">
-              <label class="radio-label"><input type="radio" name="pago-estado" value="Pagado" checked /><span class="radio-text pagado">Pagado</span></label>
-              <label class="radio-label"><input type="radio" name="pago-estado" value="No pagado" /><span class="radio-text no-pagado">No pagado</span></label>
+            <div class="estado-chips">
+              <button type="button" class="estado-chip pagado active" onclick="selectEstado(this,'pago','Pagado')"><span class="chip-dot"></span>Pagado</button>
+              <button type="button" class="estado-chip no-pagado" onclick="selectEstado(this,'pago','No pagado')"><span class="chip-dot"></span>No pagado</button>
             </div>
+            <input type="hidden" id="pago-estado-val" value="Pagado" />
           </div>
         </div>
         <div class="form-group"><label>Notas (opcional)</label><textarea id="pago-notas" placeholder="Observaciones..." rows="2"></textarea></div>
@@ -369,7 +380,10 @@
   <div id="modal-gasto" class="modal-overlay" onclick="closeModalOutside(event,'modal-gasto')">
     <div class="modal">
       <div class="modal-header">
-        <h3>Registrar Gasto</h3>
+        <div>
+          <h3>Registrar Gasto</h3>
+          <p class="modal-subtitle">Gastos generales · Inmueble</p>
+        </div>
         <button class="close-btn" onclick="closeModal('modal-gasto')">✕</button>
       </div>
       <form id="form-gasto" onsubmit="registrarGasto(event)">
@@ -423,12 +437,13 @@
         </div>
         <div class="form-group"><label>Descripción</label><textarea id="gasto-descripcion" placeholder="Detalles..." rows="2"></textarea></div>
         <div class="form-group"><label>Método de pago</label>
-          <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="gasto-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-usd">Zelle</span></label>
-            <label class="radio-label"><input type="radio" name="gasto-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-usd">Dólares</span></label>
-            <label class="radio-label"><input type="radio" name="gasto-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text moneda-bs">Bolívares</span></label>
-            <label class="radio-label"><input type="radio" name="gasto-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'gasto')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
+          <div class="metodo-chips">
+            <button type="button" class="metodo-chip active" onclick="selectMetodo(this,'gasto','Zelle')">Zelle</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'gasto','Dólares')">Dólares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'gasto','Bolívares')">Bolívares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'gasto','Mixto')">Mixto</button>
           </div>
+          <input type="hidden" id="gasto-metodo-val" value="Zelle" />
         </div>
         <div class="form-group"><label>Monto (USD)</label><input type="number" id="gasto-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('gasto')" /></div>
         <div id="gasto-campos-bs" style="display:none;">
@@ -459,10 +474,11 @@
         <div class="form-row">
           <div class="form-group"><label>Fecha</label><input type="date" id="gasto-fecha" required /></div>
           <div class="form-group"><label>Estado</label>
-            <div class="radio-group" style="margin-top:6px">
-              <label class="radio-label"><input type="radio" name="gasto-estado" value="Pagado" checked /><span class="radio-text pagado">Pagado</span></label>
-              <label class="radio-label"><input type="radio" name="gasto-estado" value="No pagado" /><span class="radio-text no-pagado">No pagado</span></label>
+            <div class="estado-chips">
+              <button type="button" class="estado-chip pagado active" onclick="selectEstado(this,'gasto','Pagado')"><span class="chip-dot"></span>Pagado</button>
+              <button type="button" class="estado-chip no-pagado" onclick="selectEstado(this,'gasto','No pagado')"><span class="chip-dot"></span>No pagado</button>
             </div>
+            <input type="hidden" id="gasto-estado-val" value="Pagado" />
           </div>
         </div>
         <div class="form-group"><label>Notas (opcional)</label><textarea id="gasto-notas" placeholder="Observaciones..." rows="2"></textarea></div>
@@ -478,7 +494,10 @@
   <div id="modal-nonna" class="modal-overlay" onclick="closeModalOutside(event,'modal-nonna')">
     <div class="modal">
       <div class="modal-header">
-        <h3>Registrar Gasto — Casa Nonna</h3>
+        <div>
+          <h3>Registrar Gasto — Casa Nonna</h3>
+          <p class="modal-subtitle">Gastos del hogar · Cuidados</p>
+        </div>
         <button class="close-btn" onclick="closeModal('modal-nonna')">✕</button>
       </div>
       <form id="form-nonna" onsubmit="registrarNonna(event)">
@@ -493,7 +512,7 @@
           </div>
           <div class="form-group"><label>Año</label><input type="number" id="nonna-anio" value="2026" min="2020" max="2100" /></div>
         </div>
-        <div class="form-group"><label>Nombre del gasto</label><input type="text" id="nonna-nombre" placeholder="Ej: Comida Domingo" required /></div>
+        <div class="form-group"><label>Nombre del gasto</label><input type="text" id="nonna-nombre" placeholder="Ej: Medicina mensual" required /></div>
         <div class="form-group"><label>Categoría</label>
           <select id="nonna-categoria" onchange="toggleSubcategoriaNonna(this.value)">
             <option>Servicios</option><option>Cuidadoras</option>
@@ -506,6 +525,7 @@
               <option value="">Selecciona...</option>
               <option>Hidrocapital</option><option>Cantv</option><option>Corpoelec</option>
               <option>Aseo urbano</option><option>Simple TV</option><option>Movistar</option>
+              <option>Botellones de agua</option>
             </select>
           </div>
         </div>
@@ -513,7 +533,7 @@
           <div class="form-group"><label>Cuidadora</label>
             <select id="nonna-cuidadora">
               <option value="">Selecciona...</option>
-              <option>Ángela</option>
+              <option>Rosa</option><option>Nazaret</option><option>Muchacha 2</option>
             </select>
           </div>
           <div id="lista-cuidadoras-extra"></div>
@@ -523,7 +543,7 @@
           <div class="form-group"><label>Tipo</label>
             <select id="nonna-alimentacion">
               <option value="">Selecciona...</option>
-              <option>Mercado</option><option>Pollo</option><option>Carne</option><option>Pescado</option><option>Botellones de agua</option>
+              <option>Mercado</option><option>Pollo</option><option>Carne</option><option>Pescado</option>
             </select>
           </div>
         </div>
@@ -537,12 +557,13 @@
         </div>
         <div class="form-group"><label>Descripción</label><textarea id="nonna-descripcion" placeholder="Detalles..." rows="2"></textarea></div>
         <div class="form-group"><label>Método de pago</label>
-          <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="nonna-metodo" value="Zelle" checked onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-usd">Zelle</span></label>
-            <label class="radio-label"><input type="radio" name="nonna-metodo" value="Dólares" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-usd">Dólares</span></label>
-            <label class="radio-label"><input type="radio" name="nonna-metodo" value="Bolívares" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text moneda-bs">Bolívares</span></label>
-            <label class="radio-label"><input type="radio" name="nonna-metodo" value="Mixto" onchange="toggleMetodoPago(this.value,'nonna')" /><span class="radio-text" style="background:#ede9fe;color:#6d28d9">Mixto</span></label>
+          <div class="metodo-chips">
+            <button type="button" class="metodo-chip active" onclick="selectMetodo(this,'nonna','Zelle')">Zelle</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'nonna','Dólares')">Dólares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'nonna','Bolívares')">Bolívares</button>
+            <button type="button" class="metodo-chip" onclick="selectMetodo(this,'nonna','Mixto')">Mixto</button>
           </div>
+          <input type="hidden" id="nonna-metodo-val" value="Zelle" />
         </div>
         <div class="form-group"><label>Monto (USD)</label><input type="number" id="nonna-monto" placeholder="0.00" min="0" step="0.01" oninput="calcularBsGeneric('nonna')" /></div>
         <div id="nonna-campos-bs" style="display:none;">
@@ -573,10 +594,11 @@
         <div class="form-row">
           <div class="form-group"><label>Fecha</label><input type="date" id="nonna-fecha" required /></div>
           <div class="form-group"><label>Estado</label>
-            <div class="radio-group" style="margin-top:6px">
-              <label class="radio-label"><input type="radio" name="nonna-estado" value="Pagado" checked /><span class="radio-text pagado">Pagado</span></label>
-              <label class="radio-label"><input type="radio" name="nonna-estado" value="No pagado" /><span class="radio-text no-pagado">No pagado</span></label>
+            <div class="estado-chips">
+              <button type="button" class="estado-chip pagado active" onclick="selectEstado(this,'nonna','Pagado')"><span class="chip-dot"></span>Pagado</button>
+              <button type="button" class="estado-chip no-pagado" onclick="selectEstado(this,'nonna','No pagado')"><span class="chip-dot"></span>No pagado</button>
             </div>
+            <input type="hidden" id="nonna-estado-val" value="Pagado" />
           </div>
         </div>
         <div class="form-group"><label>Notas (opcional)</label><textarea id="nonna-notas" placeholder="Observaciones..." rows="2"></textarea></div>
@@ -651,6 +673,19 @@
     }
 
     toggleSubcategoriaGasto('Condominios');
+
+    function selectMetodo(btn, prefix, valor) {
+      btn.closest('.metodo-chips').querySelectorAll('.metodo-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(prefix + '-metodo-val').value = valor;
+      toggleMetodoPago(valor, prefix);
+    }
+
+    function selectEstado(btn, prefix, valor) {
+      btn.closest('.estado-chips').querySelectorAll('.estado-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(prefix + '-estado-val').value = valor;
+    }
   </script>
 </body>
 </html>

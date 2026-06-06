@@ -115,7 +115,7 @@ function onTipoTasaChangeGeneric(valor, prefix) {
 }
 
 function getMetodoData(prefix) {
-  const metodo = document.querySelector(`input[name="${prefix}-metodo"]:checked`)?.value || 'Zelle';
+  const metodo = document.getElementById(`${prefix}-metodo-val`)?.value || document.querySelector(`input[name="${prefix}-metodo"]:checked`)?.value || 'Zelle';
   let monto = parseFloat(document.getElementById(`${prefix}-monto`)?.value) || 0;
   let tasa = null, tipoTasa = null, montoBs = null;
   let montoMixUsd = null, montoMixBs = null, tasaMix = null, montoBsConvertido = null;
@@ -283,7 +283,7 @@ async function registrarPago(e) {
   btn.disabled = true; btn.textContent = 'Guardando...';
 
   const editId      = e.target.dataset.editId;
-  const estadoRadio = document.querySelector('input[name="pago-estado"]:checked');
+  const estadoRadio = { value: document.getElementById('pago-estado-val')?.value || 'No pagado' };
   const metodoData  = getMetodoData('pago');
 
   if (metodoData.metodo === 'Bolívares' && !metodoData.tasa) {
@@ -339,8 +339,11 @@ async function editarPago(id) {
     document.getElementById('pago-fecha').value     = p.fecha;
     document.getElementById('pago-notas').value     = p.notas || '';
 
-    const radioMetodo = document.querySelector(`input[name="pago-metodo"][value="${p.metodo || 'Zelle'}"]`);
-    if (radioMetodo) { radioMetodo.checked = true; toggleMetodoPago(p.metodo, 'pago'); }
+    document.getElementById('pago-metodo-val').value = p.metodo || 'Zelle';
+    document.querySelectorAll('#modal-pago .metodo-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (p.metodo || 'Zelle'));
+    });
+    toggleMetodoPago(p.metodo, 'pago');
 
     if (p.metodo === 'Bolívares') {
       document.getElementById('pago-monto').value     = p.monto || '';
@@ -356,8 +359,10 @@ async function editarPago(id) {
       document.getElementById('pago-monto').value = p.monto || '';
     }
 
-    const radioEstado = document.querySelector(`input[name="pago-estado"][value="${p.estado}"]`);
-    if (radioEstado) radioEstado.checked = true;
+    document.getElementById('pago-estado-val').value = p.estado || 'No pagado';
+    document.querySelectorAll('#modal-pago .estado-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (p.estado || 'No pagado'));
+    });
 
     document.getElementById('form-pago').dataset.editId = id;
     document.querySelector('#modal-pago .modal-header h3').textContent = 'Editar Pago';
@@ -465,7 +470,7 @@ async function registrarGasto(e) {
   btn.disabled = true; btn.textContent = 'Guardando...';
 
   const editId     = e.target.dataset.editId;
-  const estadoRadio = document.querySelector('input[name="gasto-estado"]:checked');
+  const estadoRadio = { value: document.getElementById('gasto-estado-val')?.value || 'No pagado' };
   const metodoData  = getMetodoData('gasto');
 
   if (metodoData.metodo === 'Bolívares' && !metodoData.tasa) {
@@ -517,8 +522,11 @@ async function editarGasto(id) {
     document.getElementById('gasto-fecha').value       = g.fecha;
     document.getElementById('gasto-notas').value       = g.notas || '';
 
-    const radioMetodo = document.querySelector(`input[name="gasto-metodo"][value="${g.metodo || 'Zelle'}"]`);
-    if (radioMetodo) { radioMetodo.checked = true; toggleMetodoPago(g.metodo, 'gasto'); }
+    document.getElementById('gasto-metodo-val').value = g.metodo || 'Zelle';
+    document.querySelectorAll('#modal-gasto .metodo-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (g.metodo || 'Zelle'));
+    });
+    toggleMetodoPago(g.metodo, 'gasto');
 
     if (g.metodo === 'Bolívares') {
       document.getElementById('gasto-monto').value     = g.monto || '';
@@ -532,8 +540,10 @@ async function editarGasto(id) {
       document.getElementById('gasto-monto').value = g.monto || '';
     }
 
-    const radioEstado = document.querySelector(`input[name="gasto-estado"][value="${g.estado}"]`);
-    if (radioEstado) radioEstado.checked = true;
+    document.getElementById('gasto-estado-val').value = g.estado || 'No pagado';
+    document.querySelectorAll('#modal-gasto .estado-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (g.estado || 'No pagado'));
+    });
 
     document.getElementById('form-gasto').dataset.editId = id;
     document.querySelector('#modal-gasto .modal-header h3').textContent = 'Editar Gasto';
@@ -641,7 +651,7 @@ async function registrarNonna(e) {
   btn.disabled = true; btn.textContent = 'Guardando...';
 
   const editId      = e.target.dataset.editId;
-  const estadoRadio = document.querySelector('input[name="nonna-estado"]:checked');
+  const estadoRadio = { value: document.getElementById('nonna-estado-val')?.value || 'No pagado' };
   const metodoData  = getMetodoData('nonna');
 
   if (metodoData.metodo === 'Bolívares' && !metodoData.tasa) {
@@ -694,8 +704,11 @@ async function editarNonna(id) {
     document.getElementById('nonna-notas').value       = n.notas || '';
     if (n.servicio) document.getElementById('nonna-servicio').value = n.servicio;
 
-    const radioMetodo = document.querySelector(`input[name="nonna-metodo"][value="${n.metodo || 'Zelle'}"]`);
-    if (radioMetodo) { radioMetodo.checked = true; toggleMetodoPago(n.metodo, 'nonna'); }
+    document.getElementById('nonna-metodo-val').value = n.metodo || 'Zelle';
+    document.querySelectorAll('#modal-nonna .metodo-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (n.metodo || 'Zelle'));
+    });
+    toggleMetodoPago(n.metodo, 'nonna');
 
     if (n.metodo === 'Bolívares') {
       document.getElementById('nonna-monto').value     = n.monto || '';
@@ -709,8 +722,10 @@ async function editarNonna(id) {
       document.getElementById('nonna-monto').value = n.monto || '';
     }
 
-    const radioEstado = document.querySelector(`input[name="nonna-estado"][value="${n.estado}"]`);
-    if (radioEstado) radioEstado.checked = true;
+    document.getElementById('nonna-estado-val').value = n.estado || 'No pagado';
+    document.querySelectorAll('#modal-nonna .estado-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent.trim() === (n.estado || 'No pagado'));
+    });
 
     document.getElementById('form-nonna').dataset.editId = id;
     document.querySelector('#modal-nonna .modal-header h3').textContent = 'Editar Gasto — Casa Nonna';
